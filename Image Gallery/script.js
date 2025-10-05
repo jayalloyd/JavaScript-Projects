@@ -23,20 +23,11 @@
             displayContainer.style.display = 'flex'; // Change from 'none' to 'flex'
         }
         
-        // --- CLOSE LIGHTBOX LOGIC ---
-        function closeLightbox(event) {
-            // Only hide if the user clicks the background (displayContainer) itself, not the image
-            // We check the ID to ensure we are clicking the backdrop
-            if (event.target.id === 'display-container') {
-                displayContainer.style.display = 'none';
-            }
-        }
-
+       
         // --- ATTACH LISTENERS ---
         // 1. Loop through all gallery images and attach the click listener to each one.
         galleryImages.forEach(img => {
             img.addEventListener('click', expandImage);
         });
 
-        // 2. Attach the listener to the lightbox container to handle closing.
-        displayContainer.addEventListener('click', closeLightbox);
+   

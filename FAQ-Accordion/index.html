@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4: Accordion FAQ</title>
+    <!-- Load Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <!-- Accordion Container -->
+    <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        <h1 class="text-3xl font-bold p-6 text-center text-indigo-700 border-b border-gray-100">
+            Frequently Asked Questions
+        </h1>
+
+        <div class="divide-y divide-gray-100">
+            
+            <!-- Accordion Item 1 -->
+            <div class="accordion-item">
+                <button class="accordion-header w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-indigo-50 transition-colors duration-200 cursor-pointer">
+                    <span class="text-lg font-semibold text-gray-800">1. What is the Virtual DOM?</span>
+                    <span class="text-2xl text-indigo-500 font-light toggle-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="pb-4">
+                        The **Virtual DOM (VDOM)** is a programming concept where a virtual representation of the UI is kept in memory and synced with the "Real" DOM by a library like React. This allows React to figure out the minimal set of changes needed and update the browser efficiently, rather than re-rendering the entire page.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Accordion Item 2 -->
+            <div class="accordion-item">
+                <button class="accordion-header w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-indigo-50 transition-colors duration-200 cursor-pointer">
+                    <span class="text-lg font-semibold text-gray-800">2. Why should I avoid mutating state arrays?</span>
+                    <span class="text-2xl text-indigo-500 font-light toggle-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="pb-4">
+                        This is the **Immutability rule**. If you directly change (mutate) an array or object in React, the VDOM cannot detect that a change occurred because the object reference remains the same. You must use methods like `.map()` or `.filter()` to return a **new array reference**, which signals to React that a re-render is required.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Accordion Item 3 -->
+            <div class="accordion-item">
+                <button class="accordion-header w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-indigo-50 transition-colors duration-200 cursor-pointer">
+                    <span class="text-lg font-semibold text-gray-800">3. When is Flexbox necessary?</span>
+                    <span class="text-2xl text-indigo-500 font-light toggle-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <p class="pb-4">
+                        Flexbox is used for **arranging, aligning, and distributing space** among items *inside* a container. It's necessary when you need to center content (horizontally and vertically) or create responsive navigation layouts.
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

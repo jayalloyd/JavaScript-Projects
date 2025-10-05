@@ -1,0 +1,36 @@
+/* Custom Font and Background */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: #f7f9fb; /* Light background */
+        }
+        
+        /* ------------------------------------------- */
+        /* Core Accordion Behavior (State Management)  */
+        /* ------------------------------------------- */
+
+        /* Content is hidden by default. Transition smooths the opening/closing. */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 1.5rem;
+            color: #4b5563; /* Darker gray text */
+        }
+
+        /* The JavaScript's job is to add the 'active' class to the parent item. */
+        .accordion-item.active .accordion-content {
+            max-height: 500px; /* Max height large enough to always show content */
+            padding: 1rem 1.5rem 1.5rem;
+        }
+
+        /* Optional: Rotate the plus/minus icon for visual feedback */
+        .accordion-item.active .toggle-icon {
+            transform: rotate(45deg);
+        }
+        
+        /* Icon transition for smoothness */
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
