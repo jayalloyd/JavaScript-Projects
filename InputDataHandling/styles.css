@@ -1,0 +1,24 @@
+:root{
+
+--color-primary: #16dc58;
+    --color-secondary: #a56abd;
+    --color-text-light: beige;
+    --color-text-dark: rgb(22, 24, 24);
+
+
+
+
+}
+.outer-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--color-secondary);
+}
+p{
+    font-size: 1.5rem;
+    color:var(--color-text-dark);
+   color:var(--color-text-dark);
+    margin-bottom: 20px;
+}
