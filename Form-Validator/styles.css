@@ -1,0 +1,23 @@
+.font-inter { font-family: 'Inter', sans-serif; }
+        
+        /* Custom styles for HTML5 validation feedback */
+        input:invalid:not(:placeholder-shown):focus,
+        input:invalid:not(:placeholder-shown) {
+            border-color: #ef4444 !important; /* Red-500 */
+            box-shadow: 0 0 0 1px #ef4444 !important;
+        }
+        input:valid:not(:placeholder-shown):focus,
+        input:valid:not(:placeholder-shown) {
+            border-color: #22c55e !important; /* Green-500 */
+        }
+        
+        .submit-btn { transition: all 0.2s ease-in-out; }
+        .submit-btn:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .submit-btn:active { transform: translateY(1px); }
+        
+        /* Message Box styling */
+        #message-box {
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
