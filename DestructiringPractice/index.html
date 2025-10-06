@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destructuring Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .font-inter { font-family: 'Inter', sans-serif; }
+        code { background-color: #f3f4f6; padding: 2px 4px; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4 font-inter">
+
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 space-y-8 border border-gray-200">
+        
+        <h1 class="text-3xl font-extrabold text-gray-800 text-center border-b pb-3">
+            Destructuring: Object & Array
+        </h1>
+
+        <!-- Object Destructuring Demo -->
+        <div class="space-y-4 p-4 border rounded-xl bg-indigo-50">
+            <h2 class="text-xl font-semibold text-indigo-800">1. User Data Extraction (Object Destructuring)</h2>
+            <p class="text-sm text-gray-700">Extracting <code>name</code>, <code>city</code>, and renaming <code>id</code> to <code>userId</code>, while setting a default for missing <code>title</code>.</p>
+            <div id="object-output" class="text-gray-900 font-mono text-sm space-y-1 bg-white p-3 rounded-lg">
+                <!-- Output will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Array Destructuring Demo -->
+        <div class="space-y-4 p-4 border rounded-xl bg-green-50">
+            <h2 class="text-xl font-semibold text-green-800">2. Leaderboard Values (Array Destructuring)</h2>
+            <p class="text-sm text-gray-700">Quickly grabbing the first three items from an array of scores.</p>
+            <div id="array-output" class="text-gray-900 font-mono text-sm space-y-1 bg-white p-3 rounded-lg">
+                <!-- Output will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Mock Data ---
+        const userProfile = {
+            id: 'A1B2C3',
+            firstName: 'Sarah',
+            lastName: 'Conway',
+            email: 'sarah@example.com',
+            // Notice the 'city' and 'title' properties are missing in some objects!
+            settings: { theme: 'dark', notifications: true }
+        };
+        
+        const topScores = [985, 920, 855, 710, 640];
+        
+        // --- 1. Object Destructuring ---
+        function processUserProfile(profile) {
+            
+            // 🔑 Destructuring with Renaming and Default Values
+            const { 
+                // Basic extraction and renaming:
+                id: userId, 
+                firstName, 
+                // Extraction with a default value (if 'title' is undefined, use 'N/A'):
+                title = 'Unassigned', 
+                // Accessing nested properties:
+                settings: { theme } 
+            } = profile;
+
+            const output = [
+                `User ID (Renamed): ${userId}`,
+                `First Name: ${firstName}`,
+                `Title (Defaulted): ${title}`,
+                `Theme (Nested): ${theme}`
+            ];
+
+            return output;
+        }
+
+        // --- 2. Array Destructuring ---
+        function processScores(scores) {
+            
+            // 🔑 Array Destructuring
+            // We pull the first three elements by position: first, second, third
+            const [first, second, third, ...restOfScores] = scores;
+
+            const output = [
+                `1st Place: ${first}`,
+                `2nd Place: ${second}`,
+                `3rd Place: ${third}`,
+                // We use the 'rest' operator to capture the remaining items
+                `Remaining Scores: ${restOfScores.join(', ')}`
+            ];
+            
+            return output;
+        }
+
+        // --- Rendering ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const objectOutputDiv = document.getElementById('object-output');
+            const arrayOutputDiv = document.getElementById('array-output');
+            
+            // Render Object Results
+            processUserProfile(userProfile).forEach(line => {
+                const p = document.createElement('p');
+                p.textContent = line;
+                objectOutputDiv.appendChild(p);
+            });
+            
+            // Render Array Results
+            processScores(topScores).forEach(line => {
+                const p = document.createElement('p');
+                p.textContent = line;
+                arrayOutputDiv.appendChild(p);
+            });
+            
+            console.log("All data processing complete. See the rendered output for results.");
+        });
+
+    </script>
+</body>
+</html>
