@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robust Data Aggregator</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .code-output {
+            background-color: #1f2937; 
+            color: #d1d5db; 
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: 'Consolas', 'Monospace';
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">
+            Advanced Data Aggregation & Robustness
+        </h1>
+
+        <!-- RAW DATA DISPLAY -->
+        <div class="card">
+            <h2 class="text-xl font-bold text-indigo-700 mb-2">Input Data (Includes Bad Entries)</h2>
+            <p class="text-sm text-gray-600 mb-3">
+                Notice the transactions with `amount: null`, `amount: "invalid"`, and a missing category.
+            </p>
+            <div id="raw-data-output" class="code-output text-xs"></div>
+        </div>
+
+        <!-- AGGREGATED & SORTED RESULTS -->
+        <div class="card">
+            <h2 class="text-xl font-bold text-indigo-700 mb-2">Final Sorted Summary (Functional Chaining)</h2>
+            <div id="sorted-output" class="code-output"></div>
+        </div>
+
+        <!-- ROBUSTNESS EXPLANATION -->
+        <div class="card bg-yellow-50 border-l-4 border-yellow-400">
+            <h2 class="text-xl font-bold text-yellow-700 mb-2">Robustness Check (O(N) Complexity)</h2>
+            <p class="text-gray-700">
+                The function successfully:
+            </p>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-gray-700 text-sm">
+                <li>**Ignores Bad Amounts:** Non-numeric amounts (`null`, `"invalid"`) were safely converted to 0.</li>
+                <li>**Assigns Missing Data:** The item with a missing category was grouped under **"Uncategorized"**.</li>
+                <li>**Sorting:** The final result is correctly sorted by amount (highest first).</li>
+            </ul>
+        </div>
+    </div>
+
+<script>
+    // --- Sample Data Set ---
+    const transactions = [
+        { id: 1, category: 'Groceries', amount: 55.50 },
+        { id: 2, category: 'Rent', amount: 1200.00 },
+        { id: 3, category: 'Groceries', amount: 30.00 },
+        // --- Challenge 2: Robustness Test Cases ---
+        { id: 4, category: 'Utilities', amount: null },       // Null amount
+        { id: 5, category: 'Rent', amount: 150.00 },
+        { id: 6, category: 'Entertainment', amount: 75.00 },
+        { id: 7, category: 'Groceries', amount: "invalid" },  // Non-numeric amount
+        { id: 8, amount: 25.00 },                            // Missing category
+    ];
+
+    document.getElementById('raw-data-output').textContent = JSON.stringify(transactions, null, 2);
+
+
+    /**
+     * Aggregates transaction amounts by category and then sorts the result.
+     * Implements all three challenges: Robustness, Chaining, and uses O(N) complexity.
+     */
+    function summarizeAndSortData(data) {
+        
+        // --- STEP 1: Aggregation (The O(N) Hash Map/Reduce Phase) ---
+        // Challenge 3 (Conceptual): Time Complexity is O(N) because we visit N items once,
+        // and object lookup (summary[category]) is O(1) constant time.
+        const summary = data.reduce((acc, transaction) => {
+            
+            // Challenge 2 (Robustness): Handle missing or invalid categories
+            // Set a default category if 'category' is undefined or falsy.
+            const category = transaction.category || 'Uncategorized'; 
+
+            // Challenge 2 (Robustness): Handle missing or non-numeric amounts
+            // 1. Use parseFloat() to attempt conversion (it returns NaN for "invalid" or null).
+            // 2. Use Nullish Coalescing Operator (??) to default to 0 if the original is null/undefined.
+            // 3. Use logical OR (||) to set amount to 0 if parsed amount is NaN (which is falsy).
+            const amount = parseFloat(transaction.amount ?? 0) || 0;
+            
+            // Hash Map logic: Add the amount to the correct category key
+            acc[category] = (acc[category] || 0) + amount;
+
+            return acc;
+        }, {});
+
+
+        // --- STEP 2: Functional Chaining (Sorting the Result) ---
+        // Challenge 1: Convert the aggregated object into a sorted array.
+        
+        const sortedArray = Object.entries(summary)
+            // Object.entries() converts { "Rent": 1350, "Food": 85.50 } 
+            // to [ ["Rent", 1350], ["Food", 85.50], ... ]
+            
+            .sort((a, b) => {
+                // a and b are arrays: a[0]=Category, a[1]=Amount
+                // Sort descending (b[1] - a[1]) to show the largest expenses first.
+                return b[1] - a[1];
+            })
+            
+            // Optional: Map back to a clean object structure for display
+            .map(([category, amount]) => ({ 
+                category, 
+                totalAmount: parseFloat(amount.toFixed(2)) // Keep amounts clean
+            }));
+
+        return sortedArray;
+    }
+
+    // Run the function and display the final result
+    const finalReport = summarizeAndSortData(transactions);
+    
+    document.getElementById('sorted-output').textContent = 
+        `// Aggregation Result (Sorted by Amount Descending):\n${JSON.stringify(finalReport, null, 2)}`;
+    
+</script>
+</body>
+</html>
