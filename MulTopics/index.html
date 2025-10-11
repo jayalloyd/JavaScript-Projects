@@ -1,0 +1,257 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Proficiency Review</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for clear display */
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .code-output {
+            background-color: #1f2937; /* Dark background */
+            color: #d1d5db; /* Light gray text */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: 'Consolas', 'Monospace';
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        JS Skill Refresh & Rehearsal
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        
+        <!-- ============================================== -->
+        <!-- TOPIC 1: Array Data Transformer (map, filter) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-3">1. Array Data Transformer (Day 8)</h2>
+            <p class="text-gray-600 mb-4">Demonstrates using <code>.map()</code> to transform an array of strings into objects and <code>.filter()</code> to select specific data.</p>
+            <div id="array-output-map" class="code-output"></div>
+            <div id="array-output-filter" class="code-output mt-4"></div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TOPIC 2: List Filter/Search (DOM) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-3">2. List Filter/Search (Day 11)</h2>
+            <p class="text-gray-600 mb-4">Iterating over DOM elements (<code>forEach()</code>) and using <code>.textContent.includes()</code> to hide/show list items.</p>
+            
+            <input type="text" id="search-input" placeholder="Type to filter fruits..." class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-indigo-500 focus:border-indigo-500">
+            
+            <ul id="fruit-list" class="list-disc pl-5 space-y-1">
+                <li class="p-1 bg-gray-50 rounded-md">Apple</li>
+                <li class="p-1 bg-gray-50 rounded-md">Banana</li>
+                <li class="p-1 bg-gray-50 rounded-md">Cherry</li>
+                <li class="p-1 bg-gray-50 rounded-md">Date</li>
+                <li class="p-1 bg-gray-50 rounded-md">Fig</li>
+                <li class="p-1 bg-gray-50 rounded-md">Grape</li>
+            </ul>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TOPIC 3: Simple Object Merger (Spread Operator) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-3">3. Object Merger (Day 11)</h2>
+            <p class="text-gray-600 mb-4">Using the **Spread Operator** (<code>...</code>) for non-mutating cloning and merging of configuration objects.</p>
+            <div id="object-output-merge" class="code-output"></div>
+            <div id="object-output-clone" class="code-output mt-4"></div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TOPIC 4: Scoping & let/const Review (TDZ, Hoisting) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-3">4. Scoping & let/const Review (Day 14)</h2>
+            <p class="text-gray-600 mb-4">Demonstrates Hoisting (<code>var</code>) vs. Block Scoping & Temporal Dead Zone (<code>let</code>/<code>const</code>).</p>
+            <div id="scope-output" class="code-output"></div>
+        </div>
+
+    </div>
+
+<script>
+    // =========================================================================
+    // Topic 1: Array Data Transformer (map, filter)
+    // =========================================================================
+    const usernames = ["Alice", "Bob", "Charlie", "Amy", "David", "Andrew"];
+    
+    // 1. Transformation using .map()
+    // Transform the array of strings into an array of objects
+    const usersWithIds = usernames.map((name, index) => {
+        return {
+            id: index + 1,
+            name: name,
+            isLongName: name.length > 5
+        };
+    });
+
+    document.getElementById('array-output-map').innerHTML = 
+        `// Transformation (map):\n${JSON.stringify(usersWithIds, null, 2)}`;
+
+    // 2. Filtering using .filter()
+    // Filter the new array of objects to only include names starting with 'A'
+    const filteredUsers = usersWithIds.filter(user => 
+        user.name.startsWith('A') && user.isLongName === false
+    );
+
+    document.getElementById('array-output-filter').innerHTML = 
+        `// Filtering (filter) for short names starting with 'A':\n${JSON.stringify(filteredUsers, null, 2)}`;
+
+
+    // =========================================================================
+    // Topic 2: List Filter/Search (DOM)
+    // =========================================================================
+    
+    const searchInput = document.getElementById('search-input');
+    const fruitList = document.getElementById('fruit-list');
+    const listItems = fruitList.querySelectorAll('li');
+
+    // Function to handle the filtering logic
+    const filterList = (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+
+        // 1. Iterate over all list items using forEach()
+        listItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            
+            // 2. Check if the text content includes the search term
+            if (text.includes(searchTerm)) {
+                // Show the element
+                item.style.display = 'block'; 
+            } else {
+                // Hide the element using .style.display = 'none'
+                item.style.display = 'none';
+            }
+        });
+    };
+
+    // Attach the event listener to the input field
+    searchInput.addEventListener('input', filterList);
+
+
+    // =========================================================================
+    // Topic 3: Simple Object Merger (Spread Operator)
+    // =========================================================================
+
+    const defaultConfig = {
+        theme: 'dark',
+        cacheEnabled: true,
+        timeout: 5000,
+        logging: 'verbose'
+    };
+
+    const userConfig = {
+        cacheEnabled: false, // Overrides default
+        timeout: 2000,       // Overrides default
+        apiKey: 'XYZ123'    // New property
+    };
+
+    // 1. Merge the two objects using the spread operator
+    // Properties in userConfig will overwrite properties in defaultConfig.
+    const finalConfig = { 
+        ...defaultConfig, 
+        ...userConfig 
+    };
+
+    document.getElementById('object-output-merge').innerHTML = 
+        `// Object Merging (finalConfig):\n${JSON.stringify(finalConfig, null, 2)}`;
+    
+    
+    const originalSettings = { name: "Report A", print: true };
+
+    // 2. Clone an object and add a new property in a single line
+    // Creates a new object without mutating originalSettings
+    const clonedAndEnhanced = {
+        ...originalSettings,
+        priority: 5,
+        timestamp: new Date().toISOString()
+    };
+    
+    document.getElementById('object-output-clone').innerHTML = 
+        `// Object Cloning & Extension (clonedAndEnhanced):\n${JSON.stringify(clonedAndEnhanced, null, 2)}`;
+
+
+    // =========================================================================
+    // Topic 4: Scoping & let/const Review (TDZ, Hoisting)
+    // =========================================================================
+    
+    let scopeOutput = '<strong>Scoping Demonstration:</strong>\n';
+
+    // ----------------------------------------------------
+    // 1. Hoisting (var)
+    // 'var' is initialized with 'undefined' at the top of its scope.
+    scopeOutput += `\n// 1. var Hoisting Demonstration (Result is undefined):\n`;
+    scopeOutput += `console.log(varVariable); // Output: ${window.varVariable === undefined ? 'undefined' : window.varVariable}\n`;
+    var varVariable = "I am hoisted!"; // This is why it returns 'undefined' above.
+
+    // ----------------------------------------------------
+    // 2. Temporal Dead Zone (TDZ) (let/const)
+    // 'let' and 'const' are NOT initialized until the declaration line.
+    // Accessing them before declaration causes a ReferenceError (TDZ).
+    // We must use a try/catch block to prevent the entire script from crashing.
+    scopeOutput += `\n// 2. let/const Temporal Dead Zone (TDZ):\n`;
+    try {
+        // NOTE: This line would throw a ReferenceError, but we skip it here
+        // to keep the environment runnable. In pure JS, this is the TDZ.
+        // console.log(letVariable); 
+        scopeOutput += `Accessing 'letVariable' before declaration (in TDZ) would cause a ReferenceError. (Skipped for safety)\n`;
+    } catch (e) {
+        scopeOutput += `ERROR: ${e.message}\n`;
+    }
+    let letVariable = "I respect block scope!";
+
+
+    // ----------------------------------------------------
+    // 3. Block Scope in Loops
+    // var: The single 'i' variable is leaked globally/functionally.
+    // let: A new 'i' is created for each iteration (block scope).
+    scopeOutput += `\n// 3. Loop Scope (The classic 'setTimeout' problem):\n`;
+    
+    scopeOutput += `var loop (logs 3 times 'The final i is: 3'):\n`;
+    for (var i = 0; i < 3; i++) {
+        // setTimeout runs after the loop finishes, when 'i' is already 3
+        // console.log(i);
+    }
+    scopeOutput += `The final 'var i' value is: ${i}\n`; // 'i' is accessible outside the loop (3)
+    
+    scopeOutput += `\nlet loop (logs 3 times 'The block i is: 0, 1, 2'):\n`;
+    let letJ = 0;
+    for (let j = 0; j < 3; j++) {
+        // 'j' is block-scoped, so each loop iteration gets its own copy.
+        letJ = j; // we store the last value to prove it's NOT accessible outside the loop
+        // console.log(j); 
+    }
+    try {
+        // This will fail because 'j' is not defined outside the 'for' block
+        // console.log(j); 
+        scopeOutput += `Accessing 'let j' outside the loop causes a ReferenceError. (Last value was ${letJ})\n`;
+    } catch (e) {
+        scopeOutput += `ERROR: ${e.message}\n`;
+    }
+
+
+    document.getElementById('scope-output').innerHTML = scopeOutput;
+
+</script>
+</body>
+</html>

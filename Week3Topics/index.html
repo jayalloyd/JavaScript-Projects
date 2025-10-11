@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Async Practice Pad</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .btn {
+            @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md;
+        }
+        .btn-start { @apply bg-green-500 hover:bg-green-600 text-white; }
+        .btn-stop { @apply bg-red-500 hover:bg-red-600 text-white; }
+        .btn-reset { @apply bg-gray-400 hover:bg-gray-500 text-white; }
+        .btn-primary { @apply bg-indigo-600 hover:bg-indigo-700 text-white; }
+        .code-output {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: 'Consolas', 'Monospace';
+            white-space: pre-wrap;
+            border: 1px solid #e5e7eb;
+            min-height: 50px;
+        }
+        .spinner {
+            border-top-color: #3b82f6;
+            border-right-color: transparent;
+            border-bottom-color: #3b82f6;
+            border-left-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">
+        Async JavaScript Deep Dive
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        
+        <!-- ============================================== -->
+        <!-- Topic 1: Simple Timer/Stopwatch (Day 15) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">1. Timer/Stopwatch (<code class="font-mono text-pink-500">setInterval</code>)</h2>
+            <div class="text-6xl font-mono font-extrabold text-center text-gray-900 mb-6" id="timer-display">00:00</div>
+            <div class="flex justify-center space-x-4">
+                <button class="btn btn-start" onclick="startTimer()">Start</button>
+                <button class="btn btn-stop" onclick="stopTimer()">Stop</button>
+                <button class="btn btn-reset" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- Topic 2: Promise Chain Simulator (Day 16) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">2. Promise Chain Simulator (<code class="font-mono text-pink-500">.then</code>)</h2>
+            <p class="text-gray-600 mb-4">Click to execute a two-step process that either succeeds or fails.</p>
+            <button class="btn btn-primary w-full mb-4" onclick="executePromiseChain()">Run Chain (Check Console)</button>
+            <div id="promise-output" class="code-output"></div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- Topic 3 & 4: Async/Await, Error Handling, Loading State (Days 17, 18, 19, 21) -->
+        <!-- ============================================== -->
+        <div class="card lg:col-span-2">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">3. Fetch, Async/Await & Error Handling (Days 17-21)</h2>
+            <p class="text-gray-600 mb-4">Demonstrates modern **async/await** syntax, the **Loading State**, and robust **try...catch** error handling for network calls.</p>
+            
+            <div class="flex space-x-4 mb-4">
+                <button class="btn btn-primary" onclick="fetchUserDataAsync(1)">GET User ID 1 (Success)</button>
+                <button class="btn btn-stop" onclick="fetchUserDataAsync(999)">GET User ID 999 (Simulate Error)</button>
+                <button class="btn btn-stop" onclick="fetchUserDataAsync('error-url')">GET (Simulate Network Error)</button>
+            </div>
+            
+            <div id="fetch-status" class="flex items-center text-lg font-medium mb-2">
+                <span id="loading-indicator" class="hidden w-5 h-5 border-4 rounded-full spinner mr-2"></span>
+                <span id="status-message" class="text-gray-700">Ready.</span>
+            </div>
+            
+            <h3 class="text-xl font-semibold mt-6 mb-2 text-gray-800">Fetched User Data:</h3>
+            <div id="fetch-output" class="code-output min-h-[100px]"></div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- Topic 4: Simple Post Request (Day 20) -->
+        <!-- ============================================== -->
+        <div class="card lg:col-span-2">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">4. Simple POST Request (Day 20)</h2>
+            <p class="text-gray-600 mb-4">Sends a new JSON object to the API. The API mock will return the same object with a new ID.</p>
+            <button class="btn btn-start w-full mb-4" onclick="sendNewPost()">Send New Post Data</button>
+            <h3 class="text-xl font-semibold mt-6 mb-2 text-gray-800">POST Response:</h3>
+            <div id="post-output" class="code-output min-h-[100px]"></div>
+        </div>
+
+    </div>
+
+<script>
+    // =========================================================================
+    // 1. Simple Timer/Stopwatch (Day 15: setInterval and clearInterval)
+    // =========================================================================
+    let timerInterval = null;
+    let seconds = 0;
+    const timerDisplay = document.getElementById('timer-display');
+
+    function updateTimerDisplay() {
+        const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        timerDisplay.textContent = `${minutes}:${secs}`;
+    }
+
+    function startTimer() {
+        if (timerInterval) return; // Prevent multiple intervals running
+        timerInterval = setInterval(() => {
+            seconds++;
+            updateTimerDisplay();
+        }, 1000);
+        console.log("Timer started.");
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            console.log("Timer stopped.");
+        }
+    }
+
+    function resetTimer() {
+        stopTimer();
+        seconds = 0;
+        updateTimerDisplay();
+        console.log("Timer reset.");
+    }
+
+    // Initialize display
+    updateTimerDisplay();
+
+
+    // =========================================================================
+    // 2. Promise Chain Simulator (Day 16: Promises)
+    // =========================================================================
+    const promiseOutput = document.getElementById('promise-output');
+
+    // Promise 1: Simulates initial processing
+    function stepOne(data) {
+        return new Promise((resolve, reject) => {
+            // Randomly decide if the first step succeeds
+            const success = Math.random() > 0.3; 
+            setTimeout(() => {
+                if (success) {
+                    resolve(`${data} - Step 1 Complete.`);
+                } else {
+                    reject('Step 1 Failed: Initial processing error.');
+                }
+            }, 1000);
+        });
+    }
+
+    // Promise 2: Simulates database write or network call
+    function stepTwo(data) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(`${data} - Step 2 Complete. Final success!`);
+            }, 500);
+        });
+    }
+
+    function executePromiseChain() {
+        promiseOutput.textContent = 'Executing promise chain... (Check Console)';
+
+        stepOne('Start Data')
+            .then(result => {
+                console.log('-> First promise resolved:', result);
+                promiseOutput.textContent += `\n-> Resolved 1: ${result}`;
+                return stepTwo(result); // Pass result to the next promise
+            })
+            .then(finalResult => {
+                console.log('-> Second promise resolved:', finalResult);
+                promiseOutput.textContent += `\n-> Resolved 2: ${finalResult}`;
+                promiseOutput.classList.remove('text-red-600');
+                promiseOutput.classList.add('text-green-600');
+            })
+            .catch(error => { // Day 16: .catch() for error handling
+                console.error('-> Chain Failed:', error);
+                promiseOutput.textContent += `\n-> FAILURE: ${error}`;
+                promiseOutput.classList.remove('text-green-600');
+                promiseOutput.classList.add('text-red-600');
+            });
+    }
+
+
+    // =========================================================================
+    // 3. Fetch, Async/Await, Error Handling & Loading State (Days 17, 18, 19, 21)
+    // =========================================================================
+    const fetchOutput = document.getElementById('fetch-output');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const statusMessage = document.getElementById('status-message');
+    const USER_API = 'https://jsonplaceholder.typicode.com/users/';
+
+    /**
+     * Day 18: Refactored fetch to use async/await
+     * Day 19: Includes Loading State management
+     * Day 21: Includes try...catch for robust error handling
+     */
+    async function fetchUserDataAsync(userId) {
+        const url = (userId === 'error-url') ? 'http://badurl.com/data' : `${USER_API}${userId}`;
+
+        // Day 19: Display "Loading..." State
+        loadingIndicator.classList.remove('hidden');
+        statusMessage.textContent = 'Loading user data...';
+        fetchOutput.textContent = '';
+        statusMessage.classList.remove('text-red-600', 'text-green-600');
+        statusMessage.classList.add('text-gray-700');
+
+        try { // Day 21: Robust Error Handling
+            // Day 17: Core Fetch API Call
+            const response = await fetch(url); 
+
+            if (!response.ok) {
+                // Throw an error if the HTTP status is not 2xx (e.g., 404 Not Found)
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Day 17: Parsing JSON
+            const data = await response.json(); 
+
+            // Display a single user's data (Day 17)
+            fetchOutput.textContent = JSON.stringify(data, null, 2); 
+            
+            // Day 19: Success State
+            statusMessage.textContent = `Success! Fetched user: ${data.name || data.id}`;
+            statusMessage.classList.add('text-green-600');
+
+        } catch (error) {
+            // Handles network errors (e.g., URL is unreachable, offline) 
+            // and the custom HTTP status error thrown above.
+            console.error('Fetch Error:', error);
+            
+            // Day 19: Error State
+            statusMessage.textContent = `Error: ${error.message}. Check console.`;
+            statusMessage.classList.add('text-red-600');
+            fetchOutput.textContent = `Failed to fetch data. Error details: ${error.message}`;
+
+        } finally {
+            // Day 19: Hide loading indicator regardless of success or failure
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+
+    // =========================================================================
+    // 4. Simple Post Request (Day 20: fetch POST)
+    // =========================================================================
+    const POST_API = 'https://jsonplaceholder.typicode.com/posts';
+    const postOutput = document.getElementById('post-output');
+
+    async function sendNewPost() {
+        postOutput.textContent = 'Sending POST request...';
+        const newPost = {
+            title: 'My Async Practice Post',
+            body: 'This data was sent using the modern fetch POST method.',
+            userId: 1 
+        };
+
+        try {
+            const response = await fetch(POST_API, {
+                method: 'POST', // Day 20: Set the HTTP method
+                headers: {
+                    'Content-Type': 'application/json' // Must specify content type
+                },
+                body: JSON.stringify(newPost) // Day 20: Send JSON payload
+            });
+
+            if (!response.ok) {
+                throw new Error(`POST failed with status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+
+            // The API mock returns the new object with a simulated ID (usually 101)
+            postOutput.textContent = `POST Successful! Response Data (Simulated ID: ${responseData.id}):\n`;
+            postOutput.textContent += JSON.stringify(responseData, null, 2);
+            
+        } catch (error) {
+            console.error('POST Error:', error);
+            postOutput.textContent = `POST Request Failed: ${error.message}`;
+            postOutput.classList.remove('text-green-600');
+            postOutput.classList.add('text-red-600');
+        }
+    }
+</script>
+</body>
+</html>

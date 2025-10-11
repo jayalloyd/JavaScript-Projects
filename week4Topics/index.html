@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS DOM & Event Practice</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .concept-title {
+            @apply text-xl font-bold text-indigo-700 mb-3 border-b pb-2;
+        }
+
+        /* Styles specific to the Carousel (Day 22) */
+        .carousel-container { position: relative; height: 150px; overflow: hidden; }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            user-select: none;
+        }
+        .slide.active { opacity: 1; }
+
+        /* Styles specific to the Dropdown (Day 24) */
+        .dropdown-menu {
+            position: absolute;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+        }
+        .dropdown-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Styles specific to the Rating (Day 25) */
+        .rating-star {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rating-star:hover {
+            color: gold;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">
+        DOM Interaction & Logic Playground
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        
+        <!-- ============================================== -->
+        <!-- 1. Simple Carousel (Day 22) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <div class="concept-title">1. Simple Carousel (Dynamic Styling & Indexing)</div>
+            <div class="carousel-container mb-4">
+                <div id="slide-0" class="slide active bg-purple-600">Slide 1</div>
+                <div id="slide-1" class="slide bg-blue-600">Slide 2</div>
+                <div id="slide-2" class="slide bg-pink-600">Slide 3</div>
+            </div>
+            <div class="flex justify-between space-x-2">
+                <button id="prev-btn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md font-medium w-1/2">Previous</button>
+                <button id="next-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium w-1/2">Next</button>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 2. Progress Bar Filler (Day 23) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <div class="concept-title">2. Progress Bar Filler (DOM Manipulation)</div>
+            <div class="text-center mb-4">
+                <span id="progress-text" class="text-3xl font-mono font-bold text-indigo-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+                <div id="progress-bar" class="bg-green-500 h-4 rounded-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+            <button id="increment-btn" class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium">Add 10% Progress</button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 3. Simple Dropdown Menu (Day 24) -->
+        <!-- ============================================== -->
+        <div class="card relative">
+            <div class="concept-title">3. Simple Dropdown Menu (Event Bubbling)</div>
+            <div class="relative inline-block text-left">
+                <button id="dropdown-toggle" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium">
+                    Menu <span id="arrow">▼</span>
+                </button>
+                
+                <div id="dropdown-menu" class="dropdown-menu mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu">
+                    <div class="py-1" role="none">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Option 1</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Option 2</a>
+                        <div class="px-4 py-2 text-xs text-gray-500">
+                            Click here (inside) and menu stays open!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 text-sm text-gray-500">Click anywhere else on the page to close it.</p>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 4. Data Attribute Rating (Day 25) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <div class="concept-title">4. Data Attribute Rating (Reading <code class="font-mono">data-*</code>)</div>
+            <p class="mb-3 text-gray-600">Click a star to submit a rating:</p>
+            <div id="rating-container" class="text-4xl text-gray-400 mb-4">
+                <span class="rating-star" data-rating="1">★</span>
+                <span class="rating-star" data-rating="2">★</span>
+                <span class="rating-star" data-rating="3">★</span>
+                <span class="rating-star" data-rating="4">★</span>
+                <span class="rating-star" data-rating="5">★</span>
+            </div>
+            <div id="rating-output" class="p-3 bg-indigo-50 rounded-md text-indigo-800 font-medium">No rating selected.</div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 5. Temperature Converter (Day 26) -->
+        <!-- ============================================== -->
+        <div class="card lg:col-span-2">
+            <div class="concept-title">5. Temperature Converter (Multiple Inputs & Logic Flow)</div>
+            <p class="mb-4 text-gray-600">Typing in one field updates the other immediately.</p>
+            <div class="flex space-x-4">
+                <div class="w-1/2">
+                    <label for="celsius" class="block text-sm font-medium text-gray-700">Celsius (°C)</label>
+                    <input type="number" id="celsius" placeholder="Enter Celsius" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="w-1/2">
+                    <label for="fahrenheit" class="block text-sm font-medium text-gray-700">Fahrenheit (°F)</label>
+                    <input type="number" id="fahrenheit" placeholder="Enter Fahrenheit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // =========================================================================
+    // 1. Simple Carousel (Day 22: Dynamic Styling & Indexing)
+    // =========================================================================
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+
+    /**
+     * Updates the opacity of slides based on the current index.
+     */
+    function showSlide(index) {
+        // Remove 'active' class from all slides
+        slides.forEach(slide => slide.classList.remove('active'));
+        
+        // Add 'active' class to the slide at the new index
+        slides[index].classList.add('active');
+    }
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+        // Increment index, looping back to 0 if it exceeds the total count
+        currentIndex = (currentIndex + 1) % totalSlides; 
+        showSlide(currentIndex);
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        // Decrement index, looping to the last slide if it goes below 0
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex);
+    });
+    
+    // Initial display
+    showSlide(currentIndex);
+
+    // =========================================================================
+    // 2. Progress Bar Filler (Day 23: DOM Manipulation)
+    // =========================================================================
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    let progressValue = 0;
+
+    document.getElementById('increment-btn').addEventListener('click', () => {
+        if (progressValue < 100) {
+            progressValue += 10;
+            if (progressValue > 100) progressValue = 100; // Cap at 100%
+
+            // Key concept: Updating visual state using .style.width
+            progressBar.style.width = `${progressValue}%`;
+            progressText.textContent = `${progressValue}%`;
+        }
+    });
+
+    // =========================================================================
+    // 3. Simple Dropdown Menu (Day 24: Event Bubbling & stopPropagation)
+    // =========================================================================
+    const dropdownToggle = document.getElementById('dropdown-toggle');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+
+    function toggleMenu() {
+        dropdownMenu.classList.toggle('open');
+    }
+
+    // Toggle button click listener
+    dropdownToggle.addEventListener('click', (event) => {
+        event.stopPropagation(); // Stop event from bubbling up and immediately closing the menu
+        toggleMenu();
+    });
+
+    // Key concept: Stop click events inside the menu from bubbling up 
+    // to the document listener (which closes the menu).
+    dropdownMenu.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    // Global listener to close the menu when clicking outside (Event Bubbling)
+    document.addEventListener('click', (event) => {
+        // Check if the menu is open and the click target is NOT the toggle button
+        if (dropdownMenu.classList.contains('open') && event.target !== dropdownToggle) {
+            dropdownMenu.classList.remove('open');
+        }
+    });
+
+    // =========================================================================
+    // 4. Data Attribute Rating (Day 25: Reading data-* Attributes)
+    // =========================================================================
+    const ratingContainer = document.getElementById('rating-container');
+    const ratingOutput = document.getElementById('rating-output');
+    const ratingStars = document.querySelectorAll('.rating-star');
+
+    // Function to visually update the stars
+    function updateStarDisplay(selectedRating) {
+        ratingStars.forEach(star => {
+            // Key concept: Reading the data-rating attribute via .dataset
+            const starValue = parseInt(star.dataset.rating);
+            if (starValue <= selectedRating) {
+                star.style.color = 'gold'; // Highlight selected stars
+            } else {
+                star.style.color = '#9ca3af'; // Gray out unselected stars
+            }
+        });
+    }
+    
+    ratingContainer.addEventListener('click', (event) => {
+        const star = event.target.closest('.rating-star');
+        if (star) {
+            // Read the data attribute and convert it to a number
+            const rating = parseInt(star.dataset.rating);
+            
+            // Display the result
+            ratingOutput.textContent = `You submitted a rating of ${rating} stars!`;
+            ratingOutput.classList.add('bg-yellow-100', 'text-yellow-800');
+
+            // Update the visual appearance
+            updateStarDisplay(rating);
+        }
+    });
+
+    // =========================================================================
+    // 5. Temperature Converter (Day 26: Multiple Inputs & Logic Flow)
+    // =========================================================================
+    const celsiusInput = document.getElementById('celsius');
+    const fahrenheitInput = document.getElementById('fahrenheit');
+
+    function CtoF(c) {
+        return (c * 9/5) + 32;
+    }
+
+    function FtoC(f) {
+        return (f - 32) * 5/9;
+    }
+
+    // Listener for Celsius changes
+    celsiusInput.addEventListener('input', (event) => {
+        const celsius = parseFloat(event.target.value);
+        if (isNaN(celsius)) {
+            fahrenheitInput.value = '';
+        } else {
+            // Calculate F and update the F input value
+            const fahrenheit = CtoF(celsius);
+            fahrenheitInput.value = fahrenheit.toFixed(2);
+        }
+    });
+
+    // Listener for Fahrenheit changes
+    fahrenheitInput.addEventListener('input', (event) => {
+        const fahrenheit = parseFloat(event.target.value);
+        if (isNaN(fahrenheit)) {
+            celsiusInput.value = '';
+        } else {
+            // Calculate C and update the C input value
+            const celsius = FtoC(fahrenheit);
+            celsiusInput.value = celsius.toFixed(2);
+        }
+    });
+
+</script>
+</body>
+</html>
