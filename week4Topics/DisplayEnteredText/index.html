@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Input Display</title>
+    <style>
+        /* CSS for better visibility and management of button states */
+        .text-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            max-width: 400px;
+            margin: 20px;
+        }
+        .text-container button {
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        /* Sets the initial color for the disabled state */
+        .text-container button:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
+        /* Ensures new text is visually separated */
+        .text-container div {
+            margin-top: 5px;
+            padding: 5px 0;
+            border-top: 1px dotted #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-container">
+        <p>Type something and press 'submit' or Enter:</p>
+        <input type="text" name="enteredText" id="enteredText">
+        <button disabled>submit</button> 
+    </div>
+
+    <script>
+        let textContainer = document.getElementsByClassName("text-container")[0];
+        let enteredText = document.getElementById('enteredText');
+        let btn = document.querySelector('button');
+
+        // Display text function
+        function displayText() {
+            // Creates a new wrapper div for each entry
+            let tcontainer = document.createElement('div'); 
+            let displayTextArea = document.createElement('p');
+            
+            // Get value and display it
+            displayTextArea.innerText = enteredText.value;
+            tcontainer.appendChild(displayTextArea);
+            
+            // Append the new text *before* the input/button to keep them visible at the top
+            textContainer.insertBefore(tcontainer, enteredText); 
+            
+            // Reset and disable
+            enteredText.value = "";
+            btn.disabled = true;
+            btn.style.backgroundColor = "grey";
+            enteredText.focus(); 
+        }
+
+        // Enable button based on input length
+        function enableButton() {
+            if (enteredText.value.trim().length > 0) { // Used .trim() for better logic
+                btn.disabled = false;
+                btn.style.backgroundColor = "blue";
+            } else {
+                btn.disabled = true;
+                btn.style.backgroundColor = "grey";
+            }
+        }
+        
+        // Initial call to set the correct button state and color on load
+        enableButton(); 
+
+        // Add event listeners
+        enteredText.addEventListener('input', enableButton);
+        btn.addEventListener('click', displayText);
+
+        // Submitting with the 'Enter' key
+        enteredText.addEventListener('keypress', function(event) {
+            // Check for 'Enter' key AND that the button is NOT disabled (i.e., text is present)
+            if (event.key === 'Enter' && !btn.disabled) { 
+                displayText();
+            }
+        });
+    </script>
+</body>
+</html>
