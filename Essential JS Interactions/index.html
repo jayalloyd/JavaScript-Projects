@@ -26,7 +26,8 @@
                 Press one of the following keys to change the background color of the page: 
                 <code class="bg-indigo-200 p-1 rounded">R</code> (Red), 
                 <code class="bg-indigo-200 p-1 rounded">G</code> (Green), 
-                <code class="bg-indigo-200 p-1 rounded">B</code> (Blue), or 
+                <code class="bg-indigo-200 p-1 rounded">B</code> (Blue), 
+                <code class="bg-indigo-200 p-1 rounded">Y</code> (Yellow).or
                 <code class="bg-indigo-200 p-1 rounded">P</code> (Purple).
             </p>
             <p id="key-display" class="text-center text-lg font-bold p-3 rounded-lg bg-white shadow-inner">
@@ -72,17 +73,23 @@
             'g': 'bg-green-200',
             'b': 'bg-blue-200',
             'p': 'bg-purple-200',
+             'y':'bg-yellow-200',
             // Default to gray if other keys are pressed
             'default': 'bg-gray-100' 
         };
 
         // 🔑 Core Concept: Attaching the listener to the whole window
         window.addEventListener('keydown', (event) => {
+
+//             Listen for the keydown event on the entire browser screen, no matter where the user clicks."
+// Why it's used	We use window because we want the listener to capture a key press regardless of which specific element is currently selected (focused). If we attached the listener to a smaller element (like an <input> field), the key press would only be detected when the user's cursor was actively inside that input box. Since you want the whole background to change when any key is pressed, you listen to the largest possible container: the window.
+// The Rule	When you want to capture global events (like key presses, scrolls, or resizes), attach the listener to the window or document.
             // Get the key pressed and convert to lowercase for easy comparison
             const pressedKey = event.key.toLowerCase();
             
             // Clear any existing color classes (important for the transition)
-            Object.values(colorMap).forEach(cls => {
+            Object.values(colorMap).forEach(cls => {    
+                // Object.values(colorMap): This takes the colorMap object and extracts only the values into a new array.
                 mainBody.classList.remove(cls);
             });
             
