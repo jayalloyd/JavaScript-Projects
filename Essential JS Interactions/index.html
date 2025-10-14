@@ -91,6 +91,7 @@
             Object.values(colorMap).forEach(cls => {    // <-- 'cls' is the name we chose for the current item a  shorter name instead of larger name
                 // Object.values(colorMap): This takes the colorMap object and extracts only the values into a new array.
                 mainBody.classList.remove(cls);
+                // The classList property is part of every HTML element and gives you a simple set of methods (like .add(), .remove(), and .toggle()) to manage the element's CSS classes.
             });
             
             // Check if the key exists in our map
