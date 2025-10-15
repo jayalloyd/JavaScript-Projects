@@ -1,0 +1,94 @@
+ body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+       
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+       
+        #container {
+            width: 90vw;
+            max-width: 600px;
+            height: 450px;
+            position: relative;
+            background-color: #161b22;
+            border-radius: 12px;
+            overflow: hidden; 
+            border-bottom: 5px solid #00c6ff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        
+        .square {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate; 
+            will-change: transform;
+            
+            top: 0;
+        }
+
+   
+          
+        @keyframes vertical-bounce {
+           
+            0% {
+                transform: translateY(0);
+                
+                animation-timing-function: cubic-bezier(0.8, 0.05, 1, 0.5);
+            }
+            
+            100% {
+                transform: translateY(400px);
+                
+                animation-timing-function: cubic-bezier(0, 0.5, 0.2, 0.95);
+            }
+        }
+
+        
+
+        .sq-1 {
+            left: 10%;
+            background-color: #ff5733; 
+            animation-name: vertical-bounce;
+            animation-delay: 0s;
+        }
+
+        .sq-2 {
+            left: 35%;
+            background-color: #33ff57; 
+            animation-name: vertical-bounce;
+            animation-delay: 0.5s; 
+        }
+
+        .sq-3 {
+            left: 60%;
+            background-color: #3357ff; 
+            animation-name: vertical-bounce;
+            animation-delay: 1.2s; 
+        }
+
+        .sq-4 {
+            left: 80%;
+            background-color: #ff33c2; 
+            animation-name: vertical-bounce;
+            animation-delay: 0.8s; 
+        }
