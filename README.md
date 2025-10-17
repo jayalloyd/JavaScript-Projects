@@ -1,2 +1,2 @@
 # JavaScript-Projects
-Reference project-vanila JS projects
+Reference projects-vanila JS projects
