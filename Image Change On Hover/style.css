@@ -1,0 +1,30 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.image-wrapper {
+    /* Sets a maximum size for the image container */
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden; /* Ensures image corners are rounded */
+}
+
+#hoverImage {
+    /* Makes the image fill the wrapper and ensures it's clickable/hoverable */
+    width: 100%;
+    height: auto;
+    display: block; 
+    transition: transform 0.3s ease; /* Optional: A slight scale for visual feedback */
+    cursor: pointer;
+}
+
+/* Optional: Slight effect to confirm hover, but the main change should be in JS */
+#hoverImage:hover {
+    transform: scale(1.02);
+}
