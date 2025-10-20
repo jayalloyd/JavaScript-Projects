@@ -14,7 +14,7 @@
         
 //     });
 // });
-let accordionBtns = document.querySelectorAll(".accordion-header");
+const accordionBtns = document.querySelectorAll(".accordion-header");
 
 accordionBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
