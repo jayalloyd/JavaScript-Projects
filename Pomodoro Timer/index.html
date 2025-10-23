@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Async Practice Pad</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .btn {
+            @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md;
+        }
+        .btn-start { @apply bg-green-500 hover:bg-green-600 text-white; }
+        .btn-stop { @apply bg-red-500 hover:bg-red-600 text-white; }
+        .btn-reset { @apply bg-gray-400 hover:bg-gray-500 text-white; }
+        .btn-primary { @apply bg-indigo-600 hover:bg-indigo-700 text-white; }
+        .code-output {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            font-family: 'Consolas', 'Monospace';
+            white-space: pre-wrap;
+            border: 1px solid #e5e7eb;
+            min-height: 50px;
+        }
+        .spinner {
+            border-top-color: #3b82f6;
+            border-right-color: transparent;
+            border-bottom-color: #3b82f6;
+            border-left-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">
+        Async JavaScript Deep Dive
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        
+        <!-- ============================================== -->
+        <!-- Topic 1: Simple Timer/Stopwatch (Day 15) -->
+        <!-- ============================================== -->
+        <div class="card">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">1. Timer/Stopwatch (<code class="font-mono text-pink-500">setInterval</code>)</h2>
+            <div class="text-6xl font-mono font-extrabold text-center text-gray-900 mb-6" id="timer-display">00:00</div>
+            <div class="flex justify-center space-x-4">
+                <button class="btn btn-start" onclick="startTimer()">Start</button>
+                <button class="btn btn-stop" onclick="stopTimer()">Stop</button>
+                <button class="btn btn-reset" onclick="resetTimer()">Reset</button>
+                <button class="btn btn-choosetime" onclick="timeChooser()">time-limit</button>
+                <button class="btn btn-toggle" onclick="togglePauseResume()">
+                  Pause
+              </button>
+            <!-- <button class="btn btn-restart" onclick="restartTimer()">
+                  Restart
+              </button> -->
+             
+            </div>
+        </div>
+        </div>
+        <script src="script.js"></script>
+</body>
+</html>
