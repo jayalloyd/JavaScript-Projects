@@ -64,11 +64,49 @@
 
     <script>
         // --- Day 6: Keyboard Color Changer Logic ---
-        const mainBody = document.getElementById('main-body');
-        const keyDisplay = document.getElementById('key-display');
+//         const mainBody = document.getElementById('main-body');
+//         const keyDisplay = document.getElementById('key-display');
 
-        // Map keys to specific colors
-        const colorMap = {
+//         // Map keys to specific colors
+//         const colorMap = {
+//             'r': 'bg-red-200',
+//             'g': 'bg-green-200',
+//             'b': 'bg-blue-200',
+//             'p': 'bg-purple-200',
+//              'y':'bg-yellow-200',
+//             // Default to gray if other keys are pressed
+//             'default': 'bg-gray-100' 
+//         };
+
+//         // 🔑 Core Concept: Attaching the listener to the whole window
+//         window.addEventListener('keydown', (event) => {
+
+// //             Listen for the keydown event on the entire browser screen, no matter where the user clicks."
+// // Why it's used	We use window because we want the listener to capture a key press regardless of which specific element is currently selected (focused). If we attached the listener to a smaller element (like an <input> field), the key press would only be detected when the user's cursor was actively inside that input box. Since you want the whole background to change when any key is pressed, you listen to the largest possible container: the window.
+// // The Rule	When you want to capture global events (like key presses, scrolls, or resizes), attach the listener to the window or document.
+//             // Get the key pressed and convert to lowercase for easy comparison..even you can use document instead of window as well
+//             const pressedKey = event.key.toLowerCase();
+            
+//             // Clear any existing color classes (important for the transition)
+//             Object.values(colorMap).forEach(cls => {    // <-- 'cls' is the name we chose for the current item a  shorter name instead of larger name
+//                 // Object.values(colorMap): This takes the colorMap object and extracts only the values into a new array.
+//                 mainBody.classList.remove(cls);
+//                 // The classList property is part of every HTML element and gives you a simple set of methods (like .add(), .remove(), and .toggle()) to manage the element's CSS classes.
+//             });
+            
+//             // Check if the key exists in our map
+//             if (colorMap[pressedKey]) {
+//                 // Apply the new color class
+//                 mainBody.classList.add(colorMap[pressedKey]);
+//                 keyDisplay.textContent = `Key Pressed: ${event.key} (Background updated!)`;
+//             } else {
+//                 // Apply default color if the key is not recognized
+//                 mainBody.classList.add(colorMap['default']);
+//                 keyDisplay.textContent = `Key Pressed: ${event.key} (No color mapping for this key)`;
+//             }
+//         });
+
+const colors= {
             'r': 'bg-red-200',
             'g': 'bg-green-200',
             'b': 'bg-blue-200',
@@ -77,34 +115,46 @@
             // Default to gray if other keys are pressed
             'default': 'bg-gray-100' 
         };
+const defaultColor = 'bg-purple-200';
 
-        // 🔑 Core Concept: Attaching the listener to the whole window
-        window.addEventListener('keydown', (event) => {
+const keyDisplay= document.getElementById('key-display');
+const mainBody= document.getElementById('main-body')
 
-//             Listen for the keydown event on the entire browser screen, no matter where the user clicks."
-// Why it's used	We use window because we want the listener to capture a key press regardless of which specific element is currently selected (focused). If we attached the listener to a smaller element (like an <input> field), the key press would only be detected when the user's cursor was actively inside that input box. Since you want the whole background to change when any key is pressed, you listen to the largest possible container: the window.
-// The Rule	When you want to capture global events (like key presses, scrolls, or resizes), attach the listener to the window or document.
-            // Get the key pressed and convert to lowercase for easy comparison..even you can use document instead of window as well
-            const pressedKey = event.key.toLowerCase();
-            
-            // Clear any existing color classes (important for the transition)
-            Object.values(colorMap).forEach(cls => {    // <-- 'cls' is the name we chose for the current item a  shorter name instead of larger name
-                // Object.values(colorMap): This takes the colorMap object and extracts only the values into a new array.
-                mainBody.classList.remove(cls);
-                // The classList property is part of every HTML element and gives you a simple set of methods (like .add(), .remove(), and .toggle()) to manage the element's CSS classes.
-            });
-            
-            // Check if the key exists in our map
-            if (colorMap[pressedKey]) {
-                // Apply the new color class
-                mainBody.classList.add(colorMap[pressedKey]);
-                keyDisplay.textContent = `Key Pressed: ${event.key} (Background updated!)`;
-            } else {
-                // Apply default color if the key is not recognized
-                mainBody.classList.add(colorMap['default']);
-                keyDisplay.textContent = `Key Pressed: ${event.key} (No color mapping for this key)`;
-            }
+
+window.addEventListener('keypress',(event)=>{
+let inputKey=event.key;
+inputKey.toLowerCase();
+console.log(inputKey);
+inputKey.toLowerCase();
+Object.values(colors).forEach((clr)=>{
+mainBody.classList.remove(clr);
+
+
+
+})
+if(colors[inputKey]){
+  localStorage.setItem('bg-color',colors[inputKey]);
+  keyDisplay.textContent=`You pressed: ${inputKey.toUpperCase()}`;
+  mainBody.classList.add(colors[inputKey]);
+}
+else{
+  mainBody.classList.add(defaultColor);
+  keyDisplay.textContent=`You pressed: ${inputKey.toUpperCase()}`;
+}
+
+});
+window.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('bg-color');
+    if (savedTheme) {
+        // Remove default fallback class if any
+        Object.values(colors).forEach((clr) => {
+            mainBody.classList.remove(clr);
         });
+        mainBody.classList.add(savedTheme);
+    }
+});
+
+
 
 
         // --- Day 7: Password Toggle Logic ---
