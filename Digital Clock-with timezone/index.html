@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Digital clock</title>
+</head>
+<body>
+    <div class="card text-bg-primary mb-3 clock-card" style="max-width: 18rem;">
+  <div class="card-header">Digital CLock</div>
+<label for ="Time-Zonez">Select Time Zone:</label>
+<select name="time Zonez" id="Time-Zonez">
+  <option value="Asia/Kolkata">Asia/Kolkata</option>
+  <option value="UTC">UTC</option>
+  <option value="America/New_York">America/New_York</option>
+</select>
+  <div class="card-body">
+   
+           <p class="card-text date-card"></p>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
